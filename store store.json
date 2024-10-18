@@ -1,0 +1,38 @@
+// Array to keep track of favorite items
+const favorites = [];
+
+// Load favorites from localStorage on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Retrieve favorites from localStorage or use an empty array if none are found
+    const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    favorites.push(...storedFavorites); // Add stored favorites to the favorites array
+    updateButtonText(); // Update the button text based on the current favorites
+});
+
+// Function to update button text based on favorites
+function updateButtonText() {
+    document.querySelectorAll('.nd-card').forEach((card) => {
+        const productId = card.getAttribute('data-id'); // Get product ID from data attribute
+        const button = card.querySelector('.button'); // Find the button in the card
+        // Update the button text based on whether the product is a favorite
+        button.textContent = favorites.includes(productId) ? 'Remove from Favorites' : 'Add to Favorites';
+    });
+}
+
+// Function to toggle favorite status and update localStorage
+function toggleFavorite(button, productId) {
+    const isFavorite = favorites.includes(productId); // Check if the product is already a favorite
+    
+    if (isFavorite) {
+        // Remove from favorites
+        favorites.splice(favorites.indexOf(productId), 1); // Remove the product ID from the favorites array
+        button.textContent = 'Add to Favorites'; // Update button text
+    } else {
+        // Add to favorites
+        favorites.push(productId); // Add the product ID to the favorites array
+        button.textContent = 'Remove from Favorites'; // Update button text
+    }
+
+    // Update localStorage with the current favorites array
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
